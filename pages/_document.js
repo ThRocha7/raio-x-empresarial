@@ -8,17 +8,13 @@ export default function Document() {
     <Html lang="pt-BR">
       <Head>
         {/* Meta tags de SEO e compartilhamento */}
-        <meta
-          name="description"
-          content="Raio-X Empresarial — Descubra o potencial oculto da sua empresa em minutos."
-        />
+        <meta name="description" content="Raio-X Empresarial" />
         <meta property="og:title" content="Raio-X Empresarial" />
         <meta
           property="og:description"
           content="Avalie sua empresa agora e descubra o que está travando o seu crescimento."
         />
         <meta name="theme-color" content="#0B1220" />
-        {/* Favicon simples inline */}
         <link rel="icon" href="/logo-fav.ico" />
       </Head>
       <body>

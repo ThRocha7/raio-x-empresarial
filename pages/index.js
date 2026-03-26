@@ -49,6 +49,8 @@ export default function Home() {
   const [formErrors, setFormErrors] = useState({});
   const [isSubmitting, setIsSubmitting] = useState(false);
 
+  const [userId, setUserId] = useState(null);
+
   // ── Estado do questionário ───────────────────────────────
   const [answers, setAnswers] = useState({});
 
@@ -119,7 +121,9 @@ export default function Home() {
 
     setIsSubmitting(true);
     try {
-      await registerUser(formData);
+      const registeredUser = await registerUser(formData);
+      const id = registeredUser[0].id;
+      setUserId(id);
       setStep(STEPS.QUIZ);
       scrollToTop();
     } catch (err) {
@@ -141,9 +145,7 @@ export default function Home() {
   async function handleShowResult() {
     const payload = {
       lead: {
-        name: formData.name,
-        whatsapp: formData.whatsapp,
-        company: formData.company,
+        id: userId,
       },
       answers: answers,
       result: {

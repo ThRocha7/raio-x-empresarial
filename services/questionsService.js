@@ -6,11 +6,6 @@ const api = axios.create({ baseURL: "/api/v1" });
 export async function fetchQuestions() {
   try {
     const response = await api.post("/questions");
-
-    if (!response.ok) {
-      throw new Error(`HTTP ${response.status}`);
-    }
-
     const data = await response.data;
 
     // Garantir que retornamos um array válido

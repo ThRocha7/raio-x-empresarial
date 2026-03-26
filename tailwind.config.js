@@ -9,14 +9,15 @@ module.exports = {
       // Paleta baseada na identidade visual do cliente: azul escuro, dourado, preto
       colors: {
         brand: {
-          navy: "#0B1220",       // fundo escuro principal
+          navy: "#0B1220", // fundo escuro principal
           "navy-light": "#131E30", // cards e seções levemente mais claras
-          gold: "#C9A84C",       // dourado principal (CTAs, destaques)
+          gold: "#C9A84C", // dourado principal (CTAs, destaques)
           "gold-light": "#E2C97E", // dourado mais claro para hover
           "gold-muted": "#8C6F30", // dourado mais escuro para bordas
-          white: "#F5F3EF",      // off-white elegante
-          gray: "#6B7280",       // texto secundário
+          white: "#F5F3EF", // off-white elegante
+          gray: "#6B7280", // texto secundário
           "gray-light": "#9CA3AF",
+          "blue-dark": "#262358",
         },
       },
       fontFamily: {

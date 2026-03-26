@@ -1,10 +1,4 @@
-/* ============================================================
-   styles/globals.css
-   Estilos globais do Raio-X Empresarial
-   ============================================================ */
-
-/* Importa fontes do Google Fonts */
-@import url('https://fonts.googleapis.com/css2?family=Playfair+Display:wght@400;500;600;700&family=DM+Sans:wght@300;400;500;600&display=swap');
+@import url("https://fonts.googleapis.com/css2?family=Playfair+Display:wght@400;500;600;700&family=DM+Sans:wght@300;400;500;600&display=swap");
 
 @tailwind base;
 @tailwind components;
@@ -17,15 +11,15 @@
   }
 
   body {
-    background-color: #F7F5F2;
-    color: #1A1A1A;
-    font-family: 'DM Sans', sans-serif;
+    background-color: #f7f5f2;
+    color: #1a1a1a;
+    font-family: "DM Sans", sans-serif;
   }
 
   /* Seleção de texto com cor dourada */
   ::selection {
-    background-color: #C9A84C;
-    color: #0B1220;
+    background-color: #c9a84c;
+    color: #0b1220;
   }
 }
 
@@ -48,7 +42,7 @@
   .btn-primary {
     @apply bg-brand-gold text-white font-body font-semibold
            px-8 py-4 rounded-sm tracking-wider uppercase text-base
-           hover:bg-brand-gold-light transition-all duration-200
+           hover:bg-brand-gold-light transition-all duration-500
            animate-pulse-gold cursor-pointer;
   }
 
@@ -69,7 +63,7 @@
 @layer utilities {
   /* Gradiente de texto dourado */
   .text-gold-gradient {
-    background: linear-gradient(135deg, #E2C97E 0%, #C9A84C 50%, #8C6F30 100%);
+    background: linear-gradient(135deg, #e2c97e 0%, #c9a84c 50%, #8c6f30 100%);
     -webkit-background-clip: text;
     -webkit-text-fill-color: transparent;
     background-clip: text;
@@ -80,13 +74,13 @@
     position: relative;
   }
   .border-gold-animated::after {
-    content: '';
+    content: "";
     position: absolute;
     bottom: -2px;
     left: 0;
     width: 0;
     height: 1px;
-    background: #C9A84C;
+    background: #c9a84c;
     transition: width 0.3s ease;
   }
   .border-gold-animated:hover::after {
@@ -99,9 +93,9 @@
   width: 4px;
 }
 ::-webkit-scrollbar-track {
-  background: #0B1220;
+  background: #0b1220;
 }
 ::-webkit-scrollbar-thumb {
-  background: #C9A84C;
+  background: #c9a84c;
   border-radius: 2px;
 }

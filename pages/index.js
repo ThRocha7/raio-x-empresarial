@@ -1,22 +1,12 @@
-// pages/index.js
-// ============================================================
-// Página principal do Raio-X Empresarial.
-// Gerencia o estado global e renderiza as seções:
-//   1. HOME          — apresentação e chamada para ação
-//   2. COLETA        — formulário de dados do usuário
-//   3. QUESTIONÁRIO  — perguntas de múltipla escolha
-//   4. RESULTADO     — nota final e CTA de conversão
-// ============================================================
-
 import { useState, useRef } from "react";
 import Head from "next/head";
 import ProgressBar from "../components/ProgressBar";
 import QuestionCard from "../components/QuestionCard";
 import { QUESTIONS, getScoreLevel } from "../data/questions";
 import { registerUser, notifyUser } from "../services/userService";
+import { fetchQuestions } from "../services/questionsService";
 
 // ── Seções da jornada ──────────────────────────────────────
-// Facilitam o controle de qual "tela" está sendo exibida.
 const STEPS = {
   HOME: "home",
   COLLECT: "collect",
@@ -42,6 +32,11 @@ export default function Home() {
   // ── Estado de navegação ──────────────────────────────────
   const [step, setStep] = useState(STEPS.HOME);
 
+  // ── Estado das perguntas ─────────────────────────────────
+  // Inicia com as perguntas locais; substituído pela API ao clicar em "Começar agora".
+  const [questions, setQuestions] = useState(QUESTIONS); // ← NOVO
+  const [isLoadingQuestions, setIsLoadingQuestions] = useState(false); // ← NOVO
+
   // ── Estado do formulário de coleta ──────────────────────
   const [formData, setFormData] = useState({
     name: "",
@@ -55,16 +50,14 @@ export default function Home() {
   const [isSubmitting, setIsSubmitting] = useState(false);
 
   // ── Estado do questionário ───────────────────────────────
-  // Mapeia questionId -> valor da opção selecionada
   const [answers, setAnswers] = useState({});
 
-  // Ref para o topo da página (usado para scroll ao mudar de seção)
   const topRef = useRef(null);
 
   // ── Helpers de progresso ─────────────────────────────────
   const answeredCount = Object.keys(answers).length;
-  const progressPercent = (answeredCount / QUESTIONS.length) * 100;
-  const allAnswered = answeredCount === QUESTIONS.length;
+  const progressPercent = (answeredCount / questions.length) * 100; // ← ATUALIZADO
+  const allAnswered = answeredCount === questions.length; // ← ATUALIZADO
 
   // ── Pontuação ────────────────────────────────────────────
   const totalScore = Object.values(answers).reduce((acc, val) => acc + val, 0);
@@ -86,7 +79,6 @@ export default function Home() {
       ...prev,
       [name]: type === "checkbox" ? checked : value,
     }));
-    // Limpa o erro do campo ao digitar
     if (formErrors[name]) {
       setFormErrors((prev) => ({ ...prev, [name]: "" }));
     }
@@ -145,7 +137,6 @@ export default function Home() {
 
   /**
    * Exibe a tela de resultado e envia o payload completo para o backend.
-   * Este é o ponto principal de integração — contém tudo: lead + respostas + resultado.
    */
   async function handleShowResult() {
     const payload = {
@@ -156,9 +147,9 @@ export default function Home() {
       },
       answers: answers,
       result: {
-        totalScore: totalScore, // soma dos valores escolhidos
-        maxScore: QUESTIONS.length * 4, // pontuação máxima possível
-        label: scoreLevel.label, // ex: "Empresa em Desenvolvimento"
+        totalScore: totalScore,
+        maxScore: questions.length * 4, // ← ATUALIZADO
+        label: scoreLevel.label,
         emoji: scoreLevel.emoji,
       },
       submittedAt: new Date().toISOString(),
@@ -172,13 +163,9 @@ export default function Home() {
       console.error("Erro ao gerar diagnóstico:", err);
       alert("Não foi possível gerar o diagnóstico. Tente novamente.");
     }
-    // finally {
-    //   setIsSubmitting(false);
-    // }
   }
 
   // ── WhatsApp CTA link ────────────────────────────────────
-  // Ao clicar no botão de resultado, abre o WhatsApp com mensagem pré-preenchida.
   const whatsappMessage = encodeURIComponent(
     `Olá! Acabei de fazer o Raio-X Empresarial e recebi o diagnóstico: *${scoreLevel.label}*. Gostaria de saber mais sobre como melhorar os resultados da ${formData.company || "minha empresa"}.`,
   );
@@ -199,7 +186,7 @@ export default function Home() {
         <ProgressBar
           percent={progressPercent}
           answered={answeredCount}
-          total={QUESTIONS.length}
+          total={questions.length}
         />
       )}
 
@@ -211,18 +198,8 @@ export default function Home() {
         <section className="min-h-screen flex flex-col items-center justify-center px-6 py-20 max-w-2xl mx-auto">
           {/* Ícone / logo decorativo */}
           <div className="mb-8 animate-fade-in">
-            <div className="w-16 h-16 rounded-full bg-brand-gold/10 border border-brand-gold/30 flex items-center justify-center text-2xl">
-              🔍
-            </div>
+            <img src="/logo-no-text.svg" alt="logo" width={150} height={150} />
           </div>
-
-          {/* Tag superior */}
-          <p
-            className="font-body text-xs tracking-[0.25em] uppercase text-brand-gold mb-4 animate-fade-in"
-            style={{ animationDelay: "0.1s", opacity: 0 }}
-          >
-            Diagnóstico Empresarial Gratuito
-          </p>
 
           {/* Título principal */}
           <h1
@@ -231,6 +208,14 @@ export default function Home() {
           >
             Raio-X <span className="text-gold-gradient">Empresarial</span>
           </h1>
+
+          {/* Tag superior */}
+          <p
+            className="font-body text-xs tracking-[0.25em] uppercase text-brand-gold mb-4 animate-fade-in"
+            style={{ animationDelay: "0.1s", opacity: 0 }}
+          >
+            Diagnóstico Empresarial Gratuito
+          </p>
 
           {/* Linha decorativa */}
           <div
@@ -250,36 +235,21 @@ export default function Home() {
             sua empresa.
           </p>
 
-          {/* Link "saiba mais" */}
-          <p
-            className="font-body text-base text-stone-400 text-center mb-10 animate-fade-up"
-            style={{ animationDelay: "0.5s", opacity: 0 }}
-          >
-            Quer entender melhor como funciona o Raio-X Empresarial?{" "}
-            <a
-              href="#como-funciona"
-              className="text-brand-gold border-gold-animated hover:text-brand-gold-light transition-colors duration-200"
-              onClick={(e) => {
-                e.preventDefault();
-                document
-                  .getElementById("como-funciona")
-                  ?.scrollIntoView({ behavior: "smooth" });
-              }}
-            >
-              Clique aqui!
-            </a>
-          </p>
-
-          {/* CTA principal */}
+          {/* ── CTA principal — */}
           <button
-            onClick={() => {
+            onClick={async () => {
+              setIsLoadingQuestions(true);
+              const loaded = await fetchQuestions();
+              setQuestions(loaded);
+              setIsLoadingQuestions(false);
               setStep(STEPS.COLLECT);
               scrollToTop();
             }}
-            className="btn-primary text-base px-12 py-5 animate-fade-up"
+            disabled={isLoadingQuestions}
+            className="btn-primary text-base px-12 py-5 animate-fade-up disabled:opacity-60"
             style={{ animationDelay: "0.6s", opacity: 0 }}
           >
-            Começar agora
+            {isLoadingQuestions ? "Carregando..." : "Começar agora"}
           </button>
 
           {/* Bloco explicativo "Como funciona" */}
@@ -479,7 +449,6 @@ export default function Home() {
               className={`pt-2 ${formErrors.lgpdConsent ? "border border-red-400/30 rounded-sm p-3" : ""}`}
             >
               <label className="flex items-start gap-3 cursor-pointer group">
-                {/* Checkbox nativo visível mas estilizado */}
                 <div className="relative mt-0.5 flex-shrink-0">
                   <input
                     type="checkbox"
@@ -489,7 +458,6 @@ export default function Home() {
                     className="sr-only"
                     id="lgpd-checkbox"
                   />
-                  {/* Visual do checkbox — clicável via label pai */}
                   <div
                     className={`
                       w-5 h-5 rounded-sm border transition-all duration-200 flex items-center justify-center pointer-events-none
@@ -576,12 +544,9 @@ export default function Home() {
           </div>
 
           <div>
-            {QUESTIONS.map((question, index) => {
-              // Lógica de foco:
-              // - Se há perguntas sem resposta: foco na primeira delas
-              // - Se todas foram respondidas: todas ficam com opacidade total (allAnswered)
-              //   para que o usuário possa revisar e trocar antes de confirmar
-              const firstUnanswered = QUESTIONS.findIndex(
+            {/* ← ATUALIZADO: itera sobre `questions` (estado) em vez de `QUESTIONS` (constante) */}
+            {questions.map((question, index) => {
+              const firstUnanswered = questions.findIndex(
                 (q) => answers[q.id] === undefined,
               );
               const isFocused = allAnswered || index === firstUnanswered;
@@ -593,16 +558,14 @@ export default function Home() {
                   index={index}
                   selected={answers[question.id] ?? null}
                   onAnswer={handleAnswer}
-                  isLast={index === QUESTIONS.length - 1}
+                  isLast={index === questions.length - 1} // ← ATUALIZADO
                   isFocused={isFocused}
                 />
               );
             })}
           </div>
 
-          {/* Botão de confirmação final — aparece após todas as perguntas respondidas.
-               IMPORTANTE: só aqui as respostas são processadas e enviadas ao backend.
-               Antes disso o usuário pode trocar qualquer resposta livremente. */}
+          {/* Botão de confirmação final */}
           <div
             id="result-section"
             className={`mt-12 transition-all duration-500 ${
@@ -663,14 +626,14 @@ export default function Home() {
                 Pontuação
               </span>
               <span className="font-display text-brand-gold text-xl font-semibold">
-                {totalScore} / {QUESTIONS.length * 4}
+                {totalScore} / {questions.length * 4} {/* ← ATUALIZADO */}
               </span>
             </div>
             <div className="h-2 bg-stone-100 rounded-full overflow-hidden">
               <div
                 className="h-full rounded-full transition-all duration-1000"
                 style={{
-                  width: `${(totalScore / (QUESTIONS.length * 4)) * 100}%`,
+                  width: `${(totalScore / (questions.length * 4)) * 100}%`, // ← ATUALIZADO
                   backgroundColor: scoreLevel.color,
                 }}
               />

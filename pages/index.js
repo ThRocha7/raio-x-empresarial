@@ -1,4 +1,4 @@
-import { useState, useRef } from "react";
+import { useState, useRef, useEffect } from "react";
 import Head from "next/head";
 import ProgressBar from "../components/ProgressBar";
 import QuestionCard from "../components/QuestionCard";
@@ -58,12 +58,12 @@ export default function Home() {
 
   // ── Helpers de progresso ─────────────────────────────────
   const answeredCount = Object.keys(answers).length;
-  const progressPercent = (answeredCount / questions.length) * 100; // ← ATUALIZADO
-  const allAnswered = answeredCount === questions.length; // ← ATUALIZADO
+  const progressPercent = (answeredCount / questions.length) * 100;
+  const allAnswered = answeredCount === questions.length;
 
   // ── Pontuação ────────────────────────────────────────────
   const totalScore = Object.values(answers).reduce((acc, val) => acc + val, 0);
-  const scoreLevel = getScoreLevel(totalScore);
+  const scoreLevel = getScoreLevel(totalScore, questions.length);
 
   // ── Navegação para o topo ao trocar de seção ─────────────
   function scrollToTop() {
@@ -71,6 +71,11 @@ export default function Home() {
       topRef.current?.scrollIntoView({ behavior: "smooth" });
     }, 50);
   }
+
+  const [mounted, setMounted] = useState(false);
+  useEffect(() => {
+    setMounted(true);
+  }, []);
 
   // ── Handlers ─────────────────────────────────────────────
 
@@ -242,8 +247,14 @@ export default function Home() {
             onClick={async () => {
               setIsLoadingQuestions(true);
               const loaded = await fetchQuestions();
-              setQuestions(loaded);
               setIsLoadingQuestions(false);
+
+              // Ordena por type antes de salvar
+              const sorted = [...loaded].sort((a, b) =>
+                (a.type || "").localeCompare(b.type || ""),
+              );
+              setQuestions(sorted);
+
               setStep(STEPS.COLLECT);
               scrollToTop();
             }}
@@ -546,23 +557,36 @@ export default function Home() {
           </div>
 
           <div>
-            {/* ← ATUALIZADO: itera sobre `questions` (estado) em vez de `QUESTIONS` (constante) */}
             {questions.map((question, index) => {
               const firstUnanswered = questions.findIndex(
                 (q) => answers[q.id] === undefined,
               );
               const isFocused = allAnswered || index === firstUnanswered;
 
+              // Mostra título quando o type muda
+              const showCategory =
+                index === 0 || question.type !== questions[index - 1].type;
+
               return (
-                <QuestionCard
-                  key={question.id}
-                  question={question}
-                  index={index}
-                  selected={answers[question.id] ?? null}
-                  onAnswer={handleAnswer}
-                  isLast={index === questions.length - 1} // ← ATUALIZADO
-                  isFocused={isFocused}
-                />
+                <div key={question.id}>
+                  {showCategory && question.category && (
+                    <div className="mt-10 mb-2">
+                      <p className="font-body text-sm tracking-[0.2em] uppercase text-brand-gold">
+                        {question.category}
+                      </p>
+                      <div className="w-8 h-px bg-brand-gold mt-2" />
+                    </div>
+                  )}
+
+                  <QuestionCard
+                    question={question}
+                    index={index}
+                    selected={answers[question.id] ?? null}
+                    onAnswer={handleAnswer}
+                    isLast={index === questions.length - 1}
+                    isFocused={isFocused}
+                  />
+                </div>
               );
             })}
           </div>
@@ -618,41 +642,28 @@ export default function Home() {
 
           <div className="gold-divider animate-fade-in" />
 
-          {/* Pontuação visual */}
-          <div
-            className="w-full bg-white border border-stone-100 shadow-sm rounded-sm p-6 mb-6 animate-fade-up"
-            style={{ animationDelay: "0.15s" }}
-          >
-            <div className="flex items-center justify-between mb-3">
-              <span className="font-body text-xs text-stone-400 uppercase tracking-widest">
-                Pontuação
-              </span>
-              <span className="font-display text-brand-gold text-xl font-semibold">
-                {totalScore} / {questions.length * 4} {/* ← ATUALIZADO */}
-              </span>
-            </div>
-            <div className="h-2 bg-stone-100 rounded-full overflow-hidden">
-              <div
-                className="h-full rounded-full transition-all duration-1000"
-                style={{
-                  width: `${(totalScore / (questions.length * 4)) * 100}%`, // ← ATUALIZADO
-                  backgroundColor: scoreLevel.color,
-                }}
-              />
-            </div>
-          </div>
-
           {/* Descrição do diagnóstico */}
           <div
             className="w-full bg-white border border-stone-100 shadow-sm rounded-sm p-6 mb-8 animate-fade-up"
             style={{ animationDelay: "0.25s" }}
           >
-            <h3 className="font-display text-lg text-stone-800 mb-3">
+            <h3 className="font-body text-lg text-stone-800 mb-3">
               O que isso significa?
             </h3>
-            <p className="font-body text-stone-500 text-sm leading-relaxed">
-              {scoreLevel.description}
-            </p>
+            {mounted ? (
+              <p
+                className="font-body text-stone-500 text-sm leading-relaxed"
+                dangerouslySetInnerHTML={{
+                  __html: scoreLevel.description.replace(/\n/g, "<br/>"),
+                }}
+              />
+            ) : (
+              <p className="font-body text-stone-500 text-sm leading-relaxed">
+                {scoreLevel.description
+                  .replace(/<[^>]*>/g, "")
+                  .replace(/\n/g, " ")}
+              </p>
+            )}
           </div>
 
           {/* CTA principal — WhatsApp */}

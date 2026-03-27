@@ -6,7 +6,14 @@
  * @param {boolean}     isLast       - Se é a última pergunta.
  * @param {boolean}     isFocused    - Se é a próxima a ser respondida (em foco).
  */
-export default function QuestionCard({ question, index, selected, onAnswer, isLast, isFocused }) {
+export default function QuestionCard({
+  question,
+  index,
+  selected,
+  onAnswer,
+  isLast,
+  isFocused,
+}) {
   const isAnswered = selected !== null;
 
   // Opacidade: foco ou já respondida = 100%; ainda não chegou a vez = 30%
@@ -26,7 +33,9 @@ export default function QuestionCard({ question, index, selected, onAnswer, isLa
         if (next) {
           next.scrollIntoView({ behavior: "smooth", block: "center" });
         } else if (isLast) {
-          document.getElementById("result-section")?.scrollIntoView({ behavior: "smooth", block: "center" });
+          document
+            .getElementById("result-section")
+            ?.scrollIntoView({ behavior: "smooth", block: "center" });
         }
       }, 450);
     }
@@ -45,11 +54,12 @@ export default function QuestionCard({ question, index, selected, onAnswer, isLa
           className={`
             mt-1 w-8 h-8 rounded-full flex-shrink-0 flex items-center justify-center
             font-display text-base font-semibold transition-all duration-300
-            ${isFocused
-              ? "bg-brand-gold text-white"
-              : isAnswered
-              ? "bg-stone-100 text-brand-gold"
-              : "bg-stone-100 text-stone-400"
+            ${
+              isFocused
+                ? "bg-brand-gold text-white"
+                : isAnswered
+                  ? "bg-stone-100 text-brand-gold"
+                  : "bg-stone-100 text-stone-400"
             }
           `}
         >
@@ -58,7 +68,7 @@ export default function QuestionCard({ question, index, selected, onAnswer, isLa
 
         <div>
           {/* Texto principal da pergunta — fonte maior */}
-          <h3 className="font-display text-2xl text-stone-800 font-medium leading-snug mb-2">
+          <h3 className="font-body text-lg text-stone-800 font-medium leading-snug mb-2">
             {question.text}
           </h3>
           {/* Instrução auxiliar */}
@@ -79,16 +89,18 @@ export default function QuestionCard({ question, index, selected, onAnswer, isLa
             <button
               key={option.value}
               onClick={() => handleSelect(option.value)}
-              // Nunca desabilitado — a pessoa pode trocar a qualquer momento
               className={`
                 w-full text-left px-5 py-4 rounded-sm border transition-all duration-200
                 font-body text-base leading-relaxed cursor-pointer
-                ${isSelected
-                  ? "border-brand-gold text-stone-800"
-                  : "border-stone-200 text-stone-600 hover:border-brand-gold/60 hover:text-stone-800 hover:bg-brand-gold/5"
+                ${
+                  isSelected
+                    ? "border-brand-gold text-stone-800"
+                    : "border-stone-200 text-stone-600 hover:border-brand-gold/60 hover:text-stone-800 hover:bg-brand-gold/5"
                 }
               `}
-              style={isSelected ? { backgroundColor: "rgba(201,168,76,0.07)" } : {}}
+              style={
+                isSelected ? { backgroundColor: "rgba(201,168,76,0.07)" } : {}
+              }
             >
               <span className="flex items-center gap-3">
                 {/* Marcador radio */}
@@ -99,7 +111,9 @@ export default function QuestionCard({ question, index, selected, onAnswer, isLa
                     ${isSelected ? "border-brand-gold bg-brand-gold" : "border-stone-300"}
                   `}
                 >
-                  {isSelected && <span className="w-2 h-2 rounded-full bg-white" />}
+                  {isSelected && (
+                    <span className="w-2 h-2 rounded-full bg-white" />
+                  )}
                 </span>
                 {option.label}
               </span>
@@ -107,13 +121,6 @@ export default function QuestionCard({ question, index, selected, onAnswer, isLa
           );
         })}
       </div>
-
-      {/* Indicador de selecionado — com hint de que pode trocar */}
-      {isAnswered && (
-        <p className="mt-4 pl-12 text-sm text-stone-400 font-body animate-fade-in">
-          ✓ Selecionado — você pode trocar antes de confirmar
-        </p>
-      )}
     </div>
   );
 }

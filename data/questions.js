@@ -1,26 +1,29 @@
-// data/questions.js
-// ============================================================
-// Banco de perguntas do Raio-X Empresarial.
-// Cada pergunta tem: id, texto, e array de opções com valor (peso).
-// O valor de cada opção é usado para calcular a pontuação final.
-// ============================================================
-
 export const QUESTIONS = [
   {
     id: 1,
     text: "Como você avalia a clareza dos processos internos da sua empresa?",
     description: "Pense em rotinas, responsabilidades e fluxos de trabalho.",
     options: [
-      { label: "Temos processos bem documentados e seguidos por todos", value: 4 },
+      {
+        label: "Temos processos bem documentados e seguidos por todos",
+        value: 4,
+      },
       { label: "Existem processos, mas nem sempre são seguidos", value: 3 },
-      { label: "Os processos são informais e dependem das pessoas-chave", value: 2 },
-      { label: "Não temos processos definidos — cada um faz do seu jeito", value: 1 },
+      {
+        label: "Os processos são informais e dependem das pessoas-chave",
+        value: 2,
+      },
+      {
+        label: "Não temos processos definidos — cada um faz do seu jeito",
+        value: 1,
+      },
     ],
   },
   {
     id: 2,
     text: "Sua empresa possui metas e indicadores de desempenho claros?",
-    description: "Considere OKRs, KPIs, metas mensais ou qualquer métrica acompanhada regularmente.",
+    description:
+      "Considere OKRs, KPIs, metas mensais ou qualquer métrica acompanhada regularmente.",
     options: [
       { label: "Sim, acompanhamos métricas semanalmente com o time", value: 4 },
       { label: "Temos metas, mas raramente revisamos os resultados", value: 3 },
@@ -31,67 +34,58 @@ export const QUESTIONS = [
   {
     id: 3,
     text: "Como é a gestão financeira do seu negócio?",
-    description: "Fluxo de caixa, projeções, controle de custos e lucratividade.",
+    description:
+      "Fluxo de caixa, projeções, controle de custos e lucratividade.",
     options: [
-      { label: "Temos controle detalhado e tomamos decisões baseadas em dados", value: 4 },
+      {
+        label: "Temos controle detalhado e tomamos decisões baseadas em dados",
+        value: 4,
+      },
       { label: "Acompanhamos o básico, mas sem muito rigor", value: 3 },
-      { label: "A gestão financeira é reativa — só olhamos quando há problema", value: 2 },
+      {
+        label: "A gestão financeira é reativa — só olhamos quando há problema",
+        value: 2,
+      },
       { label: "Não temos controle financeiro estruturado", value: 1 },
     ],
   },
 ];
 
-// ── Thresholds de pontuação ──────────────────────────────────
-// A pontuação máxima é QUESTIONS.length * 4
-// Estes limiares definem os 4 níveis de maturidade empresarial.
 export const SCORE_LEVELS = [
   {
-    // Pontuação: 75%–100%
-    min: 9,
+    min: 60,
     label: "Empresa em Expansão",
     emoji: "🚀",
-    color: "#22c55e", // verde
+    color: "#22c55e",
     description:
-      "Sua empresa demonstra maturidade de gestão acima da média. Você já tem fundações sólidas — o próximo passo é escalar com consistência e estratégia.",
+      "Você pode estar perdendo <strong> 2% do faturamento!</strong> %Sua empresa está em um nível elevado de maturidade operacional. O foco agora é escala, previsibilidade e excelência! <br/><br/>Com base no seu nível atual, existe um potencial claro de recuperação de margem. O próximo passo é estruturar um plano para capturar esse valor de forma consistente. <br/><br/>A boa notícia é que essa margem já existe. Não depende de vender mais, e sim de ajustar o que já acontece hoje dentro da sua empresa. <br/><br/>Se você quiser, eu posso te mostrar exatamente onde começar e quais ações priorizar para já capturar esses ganhos nas próximas semanas!",
     cta: "Quero escalar minha empresa",
   },
   {
-    // Pontuação: 50%–74%
-    min: 7,
+    min: 30,
     label: "Empresa em Desenvolvimento",
     emoji: "📈",
-    color: "#C9A84C", // dourado
+    color: "#C9A84C",
     description:
-      "Você está no caminho certo, mas existem gaps que podem estar limitando seu crescimento. Uma mentoria focada pode acelerar sua evolução.",
+      "Você está perdendo entre <strong> 2% a 5% do faturamento!</strong> Sua empresa já possui estrutura, mas ainda perde eficiência por falta de integração e disciplina na execução! <br/><br/>Com base no seu nível atual, existe um potencial claro de recuperação de margem. O próximo passo é estruturar um plano para capturar esse valor de forma consistente. <br/><br/>A boa notícia é que essa margem já existe. Não depende de vender mais, e sim de ajustar o que já acontece hoje dentro da sua empresa. <br/><br/>Se você quiser, eu posso te mostrar exatamente onde começar e quais ações priorizar para já capturar esses ganhos nas próximas semanas!",
     cta: "Quero evoluir minha gestão",
   },
   {
-    // Pontuação: 25%–49%
-    min: 4,
-    label: "Empresa em Reestruturação",
-    emoji: "🔧",
-    color: "#f97316", // laranja
-    description:
-      "Sua empresa possui potencial, mas enfrenta desafios estruturais que podem estar travando os resultados. Agir agora pode mudar o jogo.",
-    cta: "Quero reestruturar minha empresa",
-  },
-  {
-    // Pontuação: 0%–24%
     min: 0,
     label: "Empresa em Alerta",
     emoji: "⚠️",
-    color: "#ef4444", // vermelho
+    color: "#ef4444",
     description:
-      "Há pontos críticos que precisam de atenção urgente. Cada dia sem ação representa oportunidade perdida e risco crescente.",
+      "Você está perdendo entre <strong>5% a 12% do faturamento!</strong> Sua empresa ainda opera de forma reativa, existe um grande potencial de ganho rápido apenas organizando processos e criando padrões mínimos! <br/><br/>Com base no seu nível atual, existe um potencial claro de recuperação de margem. O próximo passo é estruturar um plano para capturar esse valor de forma consistente. <br/><br/>A boa notícia é que essa margem já existe. Não depende de vender mais, e sim de ajustar o que já acontece hoje dentro da sua empresa. <br/><br/>Se você quiser, eu posso te mostrar exatamente onde começar e quais ações priorizar para já capturar esses ganhos nas próximas semanas!",
     cta: "Quero resolver isso agora",
   },
 ];
 
-/**
- * Retorna o nível correspondente à pontuação total.
- * @param {number} score - Soma dos valores das respostas selecionadas.
- * @returns {object} - Objeto do SCORE_LEVELS correspondente.
- */
-export function getScoreLevel(score) {
-  return SCORE_LEVELS.find((level) => score >= level.min) || SCORE_LEVELS[SCORE_LEVELS.length - 1];
+export function getScoreLevel(score, lengthQuestions) {
+  const percent = (score * 100) / lengthQuestions;
+
+  return (
+    SCORE_LEVELS.find((level) => percent >= level.min) ||
+    SCORE_LEVELS[SCORE_LEVELS.length - 1]
+  );
 }

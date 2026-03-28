@@ -1,4 +1,4 @@
-@import url("https://fonts.googleapis.com/css2?family=Playfair+Display:wght@400;500;600;700&family=DM+Sans:wght@300;400;500;600&display=swap");
+@import url("https://fonts.googleapis.com/css2?family=Playfair+Display:ital,wght@0,400;0,500;0,600;0,700;1,400&family=DM+Sans:wght@300;400;500;600&display=swap");
 
 @tailwind base;
 @tailwind components;
@@ -12,88 +12,70 @@
 
   body {
     background-color: #f7f5f2;
-    color: #1a1a1a;
+    color: #292524;
     font-family: "DM Sans", sans-serif;
+    -webkit-font-smoothing: antialiased;
   }
 
-  /* Seleção de texto com cor dourada */
   ::selection {
-    background-color: #c9a84c;
-    color: #0b1220;
+    background-color: #0e2140;
+    color: #fff;
   }
 }
 
 /* ── Componentes reutilizáveis ── */
 @layer components {
-  /* Linha decorativa dourada */
   .gold-divider {
     @apply w-12 h-px bg-brand-gold mx-auto my-6;
   }
 
-  /* Input padrão do formulário */
   .form-input {
     @apply w-full bg-white border border-stone-200 rounded-sm px-4 py-3
            text-stone-800 placeholder-stone-400 font-body text-base
-           focus:outline-none focus:border-brand-gold focus:ring-1 focus:ring-brand-gold/30
+           focus:outline-none focus:border-brand-navy focus:ring-1 focus:ring-brand-navy/20
            transition-all duration-200;
   }
 
-  /* Botão principal dourado */
   .btn-primary {
-    @apply bg-brand-gold text-white font-body font-semibold
+    @apply bg-brand-navy text-white font-body font-semibold
            px-8 py-4 rounded-sm tracking-wider uppercase text-base
-           hover:bg-brand-gold-light transition-all duration-500
-           animate-pulse-gold cursor-pointer;
+           hover:bg-brand-navy-mid transition-all duration-300
+           cursor-pointer;
   }
 
-  /* Botão secundário (outline) */
   .btn-outline {
-    @apply border border-brand-gold text-brand-gold font-body font-medium
+    @apply border border-brand-navy text-brand-navy font-body font-medium
            px-6 py-3 rounded-sm tracking-wider uppercase text-sm
-           hover:bg-brand-gold/10 transition-all duration-200 cursor-pointer;
+           hover:bg-brand-navy/5 transition-all duration-200 cursor-pointer;
   }
 
-  /* Card claro com borda sutil */
   .card {
     @apply bg-white border border-stone-100 rounded-sm p-6 shadow-sm;
   }
 }
 
-/* ── Utilitários extras ── */
+/* ── Utilitários ── */
 @layer utilities {
-  /* Gradiente de texto dourado */
   .text-gold-gradient {
     background: linear-gradient(135deg, #e2c97e 0%, #c9a84c 50%, #8c6f30 100%);
     -webkit-background-clip: text;
     -webkit-text-fill-color: transparent;
     background-clip: text;
   }
-
-  /* Borda decorativa dourada animada */
-  .border-gold-animated {
-    position: relative;
-  }
-  .border-gold-animated::after {
-    content: "";
-    position: absolute;
-    bottom: -2px;
-    left: 0;
-    width: 0;
-    height: 1px;
-    background: #c9a84c;
-    transition: width 0.3s ease;
-  }
-  .border-gold-animated:hover::after {
-    width: 100%;
+  .text-navy-gradient {
+    background: linear-gradient(135deg, #1e3d6e 0%, #0e2140 100%);
+    -webkit-background-clip: text;
+    -webkit-text-fill-color: transparent;
+    background-clip: text;
   }
 }
 
-/* ── Scrollbar customizada ── */
+/* ── Scrollbar ── */
 ::-webkit-scrollbar {
-  width: 4px;
+  width: 3px;
 }
 ::-webkit-scrollbar-track {
-  background: #0b1220;
+  background: #f7f5f2;
 }
 ::-webkit-scrollbar-thumb {
   background: #c9a84c;

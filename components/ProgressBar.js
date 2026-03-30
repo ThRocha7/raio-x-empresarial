@@ -9,7 +9,7 @@ export default function ProgressBar({ percent, answered, total }) {
     <div className="fixed top-0 left-0 right-0 z-50 h-1 bg-stone-100">
       {/* Preenchimento dourado avança suavemente conforme as respostas */}
       <div
-        className="h-full bg-brand-navy transition-all duration-500 ease-out"
+        className="h-full bg-brand-gold transition-all duration-500 ease-out"
         style={{ width: `${percent}%` }}
       />
     </div>

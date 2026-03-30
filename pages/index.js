@@ -202,7 +202,7 @@ export default function Home() {
 
       {/* ── 1. HOME ─────────────────────────────────────────── */}
       {step === STEPS.HOME && (
-        <section className="min-h-screen flex flex-col items-center justify-center px-5 py-10 md:py-20 max-w-2xl mx-auto">
+        <section className="min-h-screen flex flex-col items-center justify-center px-5 py-10 md:py-16 max-w-2xl mx-auto">
           {/* Ícone / logo decorativo */}
           <div className="mb-8 animate-fade-in">
             <img
@@ -214,7 +214,7 @@ export default function Home() {
 
           {/* Título principal */}
           <h1
-            className="font-display text-4xl md:text-6xl text-brand-navy text-center leading-tight mb-4 md:mb-6 animate-fade-up"
+            className="font-display text-4xl md:text-6xl text-white text-center leading-tight mb-4 md:mb-6 animate-fade-up"
             style={{ animationDelay: "0.2s", opacity: 0 }}
           >
             Raio-X <span className="text-gold-gradient">Empresarial</span>
@@ -222,7 +222,7 @@ export default function Home() {
 
           {/* Tag superior */}
           <p
-            className="font-body text-xs tracking-[0.25em] uppercase text-brand-navy mb-4 animate-fade-in"
+            className="font-body text-xs tracking-[0.25em] uppercase text-brand-gold mb-4 animate-fade-in"
             style={{ animationDelay: "0.1s", opacity: 0 }}
           >
             Diagnóstico Empresarial Gratuito
@@ -236,11 +236,11 @@ export default function Home() {
 
           {/* Subtítulo */}
           <p
-            className="font-body text-stone-600 text-center text-base md:text-lg leading-relaxed max-w-md mb-4 animate-fade-up"
+            className="font-body text-white/60 text-center text-base md:text-lg leading-relaxed max-w-md mb-4 animate-fade-up"
             style={{ animationDelay: "0.4s", opacity: 0 }}
           >
             Bem-vindo. O{" "}
-            <strong className="text-stone-800">Raio-X Empresarial</strong> é uma
+            <strong className="text-white">Raio-X Empresarial</strong> é uma
             avaliação rápida que identifica os principais pontos críticos da sua
             gestão — entregando um diagnóstico personalizado do estágio atual da
             sua empresa.
@@ -272,14 +272,14 @@ export default function Home() {
           {/* Bloco explicativo "Como funciona" */}
           <div
             id="como-funciona"
-            className="mt-20 w-full animate-fade-up border-t border-stone-100 pt-12"
+            className="mt-20 w-full animate-fade-up border-t border-white/10 pt-12"
             style={{ animationDelay: "0.7s", opacity: 0 }}
           >
-            <h2 className="font-display text-2xl text-stone-800 mb-1">
+            <h2 className="font-display text-2xl text-white mb-1">
               Como funciona
             </h2>
             <div className="w-8 h-px bg-brand-gold mb-5" />
-            <p className="font-body text-stone-400 text-sm leading-relaxed mb-6">
+            <p className="font-body text-white/50 text-sm leading-relaxed mb-6">
               O Raio-X Empresarial funciona em três etapas simples:
             </p>
 
@@ -307,10 +307,10 @@ export default function Home() {
                     {item.num}
                   </span>
                   <div>
-                    <p className="font-body text-stone-800 text-sm font-medium mb-0.5">
+                    <p className="font-body text-white text-sm font-medium mb-0.5">
                       {item.title}
                     </p>
-                    <p className="font-body text-stone-400 text-sm">
+                    <p className="font-body text-white/50 text-sm">
                       {item.desc}
                     </p>
                   </div>
@@ -319,12 +319,12 @@ export default function Home() {
             </div>
 
             {/* Duração */}
-            <div className="mt-6 pt-5 border-t border-stone-100 flex items-center gap-2">
+            <div className="mt-6 pt-5 border-t border-white/10 flex items-center gap-2">
               <span className="text-brand-gold">⏱</span>
-              <p className="font-body text-sm text-stone-400">
+              <p className="font-body text-sm text-white/45">
                 Duração estimada:{" "}
-                <strong className="text-brand-navy font-medium">
-                  menos de 3 minutos
+                <strong className="text-white font-medium">
+                  menos de 5 minutos
                 </strong>
               </p>
             </div>
@@ -334,17 +334,17 @@ export default function Home() {
 
       {/* ── 2. COLETA DE DADOS ──────────────────────────────── */}
       {step === STEPS.COLLECT && (
-        <section className="min-h-screen flex flex-col items-center justify-center px-5 py-10 md:py-20 max-w-2xl mx-auto">
+        <section className="min-h-screen flex flex-col items-center justify-center px-5 py-12 md:py-20 max-w-2xl mx-auto">
           {/* Cabeçalho */}
           <div className="w-full mb-10">
-            <p className="font-body text-xs tracking-[0.2em] uppercase text-brand-navy mb-2">
+            <p className="font-body text-xs tracking-[0.2em] uppercase text-brand-gold mb-2">
               Etapa 1 de 2
             </p>
-            <h2 className="font-display text-2xl md:text-4xl text-brand-navy mb-1">
+            <h2 className="font-display text-2xl md:text-4xl text-white mb-1">
               Suas informações
             </h2>
-            <div className="w-8 h-px bg-brand-navy mb-3" />
-            <p className="font-body text-stone-400 text-sm">
+            <div className="w-8 h-px bg-brand-gold mb-3" />
+            <p className="font-body text-white/50 text-sm">
               Preencha os dados abaixo para que possamos personalizar seu
               diagnóstico.
             </p>
@@ -354,7 +354,7 @@ export default function Home() {
           <div className="w-full space-y-5">
             {/* Nome */}
             <div>
-              <label className="block font-body text-xs uppercase tracking-widest text-brand-navy/50 mb-2">
+              <label className="block font-body text-xs uppercase tracking-widest text-brand-gold/70 mb-2">
                 Nome completo
               </label>
               <input
@@ -374,7 +374,7 @@ export default function Home() {
 
             {/* WhatsApp */}
             <div>
-              <label className="block font-body text-xs uppercase tracking-widest text-brand-navy/50 mb-2">
+              <label className="block font-body text-xs uppercase tracking-widest text-brand-gold/70 mb-2">
                 WhatsApp
               </label>
               <input
@@ -394,7 +394,7 @@ export default function Home() {
 
             {/* E-mail */}
             <div>
-              <label className="block font-body text-xs uppercase tracking-widest text-brand-navy/50 mb-2">
+              <label className="block font-body text-xs uppercase tracking-widest text-brand-gold/70 mb-2">
                 E-mail
               </label>
               <input
@@ -414,7 +414,7 @@ export default function Home() {
 
             {/* Nome da empresa */}
             <div>
-              <label className="block font-body text-xs uppercase tracking-widest text-brand-navy/50 mb-2">
+              <label className="block font-body text-xs uppercase tracking-widest text-brand-gold/70 mb-2">
                 Nome da empresa
               </label>
               <input
@@ -434,14 +434,14 @@ export default function Home() {
 
             {/* Cargo — drop list */}
             <div>
-              <label className="block font-body text-xs uppercase tracking-widest text-brand-navy/50 mb-2">
+              <label className="block font-body text-xs uppercase tracking-widest text-brand-gold/70 mb-2">
                 Seu cargo
               </label>
               <select
                 name="role"
                 value={formData.role}
                 onChange={handleFormChange}
-                className={`form-input appearance-none ${formErrors.role ? "border-red-400" : ""} ${!formData.role ? "text-stone-400" : "text-stone-800"}`}
+                className={`form-input appearance-none ${formErrors.role ? "border-red-400" : ""} ${!formData.role ? "text-stone-400" : "text-white"}`}
               >
                 <option value="" disabled>
                   Selecione seu cargo...
@@ -482,8 +482,8 @@ export default function Home() {
                       w-5 h-5 rounded-sm border transition-all duration-200 flex items-center justify-center pointer-events-none
                       ${
                         formData.lgpdConsent
-                          ? "bg-brand-navy border-brand-navy"
-                          : "bg-white border-stone-300 group-hover:border-brand-navy/40"
+                          ? "bg-brand-gold border-brand-gold"
+                          : "bg-white/5 border-white/20 group-hover:border-brand-gold/50"
                       }
                     `}
                   >
@@ -504,11 +504,11 @@ export default function Home() {
                     )}
                   </div>
                 </div>
-                <p className="font-body text-xs text-stone-500 leading-relaxed">
+                <p className="font-body text-xs text-white/45 leading-relaxed">
                   Autorizo o contato via WhatsApp e e-mail informados acima para
                   receber meu diagnóstico e comunicações relacionadas. Seus
                   dados são tratados conforme a{" "}
-                  <strong className="text-brand-navy font-medium">
+                  <strong className="text-white font-medium">
                     Lei Geral de Proteção de Dados (LGPD)
                   </strong>{" "}
                   e não serão compartilhados com terceiros.
@@ -534,7 +534,7 @@ export default function Home() {
           {/* Voltar */}
           <button
             onClick={() => setStep(STEPS.HOME)}
-            className="mt-4 font-body text-sm text-stone-400 hover:text-stone-700 transition-colors duration-200"
+            className="mt-4 font-body text-sm text-white/35 hover:text-white/70 transition-colors duration-200"
           >
             ← Voltar ao início
           </button>
@@ -546,16 +546,16 @@ export default function Home() {
         <section className="min-h-screen px-4 md:px-6 pt-14 pb-16 max-w-2xl mx-auto">
           {/* Cabeçalho da seção */}
           <div className="mb-6 md:mb-10">
-            <p className="font-body text-xs tracking-[0.2em] uppercase text-brand-navy mb-2">
+            <p className="font-body text-xs tracking-[0.2em] uppercase text-brand-gold mb-2">
               Etapa 2 de 2 — Diagnóstico
             </p>
-            <h2 className="font-display text-2xl md:text-4xl text-brand-navy mb-1">
+            <h2 className="font-display text-2xl md:text-4xl text-white mb-1">
               Raio-X da sua empresa
             </h2>
-            <div className="w-8 h-px bg-brand-navy mb-3" />
-            <p className="font-body text-stone-600 text-base">
+            <div className="w-8 h-px bg-brand-gold mb-3" />
+            <p className="font-body text-stone-600 text-base text-white">
               Responda com honestidade — não há respostas certas ou erradas.{" "}
-              <span className="text-brand-navy font-medium">
+              <span className="text-white font-medium">
                 {formData.company || "Sua empresa"}
               </span>{" "}
               merece um diagnóstico fiel.
@@ -576,8 +576,8 @@ export default function Home() {
               return (
                 <div key={question.id}>
                   {showCategory && question.category && (
-                    <div className="mt-6 md:mt-10 mb-1">
-                      <p className="font-display text-base tracking-[0.2em] text-brand-navy">
+                    <div className="mt-6 mb-1">
+                      <p className="font-display text-base tracking-[0.2em] text-brand-gold">
                         {question.category}
                       </p>
                     </div>
@@ -605,15 +605,15 @@ export default function Home() {
                 : "opacity-0 translate-y-4 pointer-events-none"
             }`}
           >
-            <div className="py-10 border-t border-stone-100">
-              <p className="font-display text-2xl text-brand-navy mb-2">
+            <div className="py-10 border-t border-white/10">
+              <p className="font-display text-2xl text-white mb-2">
                 Tudo pronto!
               </p>
-              <p className="font-body text-base text-stone-400 mb-2">
+              <p className="font-body text-base text-white/50 mb-2">
                 Revise suas respostas acima se quiser — você ainda pode
                 alterá-las.
               </p>
-              <p className="font-body text-sm text-stone-300 mb-8">
+              <p className="font-body text-sm text-white/30 mb-8">
                 Quando estiver satisfeito, confirme para gerar seu diagnóstico.
               </p>
               <button onClick={handleShowResult} className="btn-primary">
@@ -626,14 +626,14 @@ export default function Home() {
 
       {/* ── 4. RESULTADO ────────────────────────────────────── */}
       {step === STEPS.RESULT && (
-        <section className="min-h-screen flex flex-col items-center justify-center px-5 py-10 md:py-20 max-w-2xl mx-auto">
+        <section className="min-h-screen flex flex-col items-center justify-center px-5 py-12 md:py-20 max-w-2xl mx-auto">
           {/* Emoji do nível */}
           <div className="text-5xl mb-6 animate-fade-in">
             {scoreLevel.emoji}
           </div>
 
           {/* Tag — diagnóstico */}
-          <p className="font-body text-xs tracking-[0.2em] uppercase text-brand-navy mb-3 animate-fade-in">
+          <p className="font-body text-xs tracking-[0.2em] uppercase text-brand-gold mb-3 animate-fade-in">
             Diagnóstico de {formData.company || "sua empresa"}
           </p>
 
@@ -649,21 +649,21 @@ export default function Home() {
 
           {/* Descrição do diagnóstico */}
           <div
-            className="w-full bg-white border border-brand-navy/10 shadow-sm rounded-sm p-6 mb-8 animate-fade-up"
+            className="w-full bg-brand-navy-mid border border-white/10 rounded-sm p-6 mb-8 animate-fade-up"
             style={{ animationDelay: "0.25s" }}
           >
-            <h3 className="font-body text-lg text-brand-navy font-medium mb-3">
+            <h3 className="font-body text-lg text-white font-medium mb-3">
               O que isso significa?
             </h3>
             {mounted ? (
               <p
-                className="font-body text-stone-500 text-sm leading-relaxed"
+                className="font-body text-white/60 text-sm leading-relaxed"
                 dangerouslySetInnerHTML={{
                   __html: scoreLevel.description.replace(/\n/g, "<br/>"),
                 }}
               />
             ) : (
-              <p className="font-body text-stone-500 text-sm leading-relaxed">
+              <p className="font-body text-white/60 text-sm leading-relaxed">
                 {scoreLevel.description
                   .replace(/<[^>]*>/g, "")
                   .replace(/\n/g, " ")}
@@ -684,7 +684,7 @@ export default function Home() {
 
           {/* Aviso privacidade */}
           <p
-            className="font-body text-xs text-stone-400 text-center animate-fade-in"
+            className="font-body text-xs text-white/35 text-center animate-fade-in"
             style={{ animationDelay: "0.45s" }}
           >
             Seus dados estão protegidos conforme a LGPD. Não fazemos spam.
@@ -692,10 +692,10 @@ export default function Home() {
 
           {/* Rodapé */}
           <div
-            className="mt-16 w-full border-t border-stone-100 pt-6 text-center animate-fade-in"
+            className="mt-16 w-full border-t border-white/10 pt-6 text-center animate-fade-in"
             style={{ animationDelay: "0.55s" }}
           >
-            <p className="font-body text-xs text-brand-navy/30">
+            <p className="font-body text-xs text-white/25">
               Raio-X Empresarial © {new Date().getFullYear()} — Diagnóstico
               confidencial
             </p>

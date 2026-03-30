@@ -7,7 +7,7 @@ export default function QuestionCard({
   isFocused,
 }) {
   const isAnswered = selected !== null;
-  const opacity = isFocused || isAnswered ? 1 : 0.3;
+  const opacity = isFocused || isAnswered ? 1 : 0.35;
 
   function handleSelect(optionValue) {
     const isFirstAnswer = !isAnswered;
@@ -16,35 +16,40 @@ export default function QuestionCard({
       setTimeout(() => {
         const next = document.getElementById(`question-${index + 1}`);
         if (next) {
-          next.scrollIntoView({ behavior: "smooth", block: "center" });
+          const rect = next.getBoundingClientRect();
+          const offset = 120; // 👈 ajuste esse valor
+          window.scrollBy({ top: rect.top - offset, behavior: "smooth" });
         } else if (isLast) {
-          document
-            .getElementById("result-section")
-            ?.scrollIntoView({ behavior: "smooth", block: "center" });
+          const result = document.getElementById("result-section");
+          if (result) {
+            const rect = result.getBoundingClientRect();
+            const offset = 120;
+            window.scrollBy({ top: rect.top - offset, behavior: "smooth" });
+          }
         }
-      }, 450);
+      }, 250);
     }
   }
 
   return (
     <div
       id={`question-${index}`}
-      className="transition-all duration-500 py-6 border-b border-stone-100 last:border-0"
+      className="transition-all duration-500 py-6 border-b border-white/10 last:border-0"
       style={{ opacity }}
     >
       {/* Número + enunciado */}
       <div className="flex items-start gap-3 mb-4">
-        {/* Bolinha numerada — azul quando em foco */}
+        {/* Bolinha — dourada quando em foco */}
         <span
           className={`
             mt-0.5 w-7 h-7 rounded-full flex-shrink-0 flex items-center justify-center
-            font-display text-sm font-semibold transition-all duration-300
+            font-display text-sm font-semibold transition-all duration-300 flex-shrink-0
             ${
               isFocused
-                ? "bg-brand-navy text-white"
+                ? "bg-brand-gold text-brand-navy"
                 : isAnswered
-                  ? "bg-brand-navy/10 text-brand-navy"
-                  : "bg-stone-100 text-stone-400"
+                  ? "bg-brand-gold/20 text-brand-gold"
+                  : "bg-white/10 text-white/40"
             }
           `}
         >
@@ -52,20 +57,26 @@ export default function QuestionCard({
         </span>
 
         <div>
-          {/* Título em fonte serifada — Playfair Display */}
-          <h3 className="font-display text-lg md:text-lg text-stone-800 font-medium leading-snug mb-1">
+          {/* Título serifado — 16px */}
+          <h3
+            className="font-display text-white font-medium leading-snug mb-1"
+            style={{ fontSize: "16px" }}
+          >
             {question.text}
           </h3>
           {question.description && (
-            <p className="font-body text-sm text-stone-400 leading-relaxed">
+            <p
+              className="font-body text-white/45 leading-relaxed"
+              style={{ fontSize: "14px" }}
+            >
               {question.description}
             </p>
           )}
         </div>
       </div>
 
-      {/* Opções — compactas para caber na tela */}
-      <div className="space-y-2 pl-10">
+      {/* Opções */}
+      <div className="space-y-2">
         {question.options.map((option) => {
           const isSelected = selected === option.value;
           return (
@@ -74,28 +85,30 @@ export default function QuestionCard({
               onClick={() => handleSelect(option.value)}
               className={`
                 w-full text-left px-4 py-2.5 rounded-sm border transition-all duration-200
-                font-body text-sm leading-snug cursor-pointer
+                font-body leading-snug cursor-pointer
                 ${
                   isSelected
-                    ? "border-brand-navy text-stone-800"
-                    : "border-stone-200 text-stone-600 hover:border-brand-navy/50 hover:text-brand-navy hover:bg-brand-navy/5"
+                    ? "border-brand-gold text-white"
+                    : "border-white/15 text-white/65 hover:border-brand-gold/50 hover:text-white hover:bg-brand-gold/5"
                 }
               `}
-              style={
-                isSelected ? { backgroundColor: "rgba(14,33,64,0.05)" } : {}
-              }
+              style={{
+                fontSize: "15px",
+                ...(isSelected
+                  ? { backgroundColor: "rgba(201,168,76,0.08)" }
+                  : {}),
+              }}
             >
               <span className="flex items-center gap-2.5">
-                {/* Radio visual — azul quando selecionado */}
                 <span
                   className={`
                     w-4 h-4 rounded-full border flex-shrink-0 flex items-center justify-center
                     transition-all duration-200
-                    ${isSelected ? "border-brand-navy bg-brand-navy" : "border-stone-300"}
+                    ${isSelected ? "border-brand-gold bg-brand-gold" : "border-white/30"}
                   `}
                 >
                   {isSelected && (
-                    <span className="w-1.5 h-1.5 rounded-full bg-white" />
+                    <span className="w-1.5 h-1.5 rounded-full bg-brand-navy" />
                   )}
                 </span>
                 {option.label}
@@ -104,6 +117,15 @@ export default function QuestionCard({
           );
         })}
       </div>
+
+      {isAnswered && (
+        <p
+          className="mt-2 pl-10 text-brand-gold/50 font-body"
+          style={{ fontSize: "12px" }}
+        >
+          ✓ Selecionado — você pode trocar antes de confirmar
+        </p>
+      )}
     </div>
   );
 }

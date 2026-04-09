@@ -80,3 +80,99 @@
   background: #c9a84c;
   border-radius: 2px;
 }
+
+/* ── QuizSection ── */
+
+/* Botão desabilitado (perguntas incompletas) */
+.btn-disabled {
+  opacity: 0.5;
+  cursor: not-allowed;
+  animation: none !important;
+  box-shadow: none !important;
+}
+
+/* Shake — disparado ao clicar com perguntas incompletas */
+@keyframes shake {
+  0%,
+  100% {
+    transform: translateX(0);
+  }
+  15% {
+    transform: translateX(-6px);
+  }
+  30% {
+    transform: translateX(6px);
+  }
+  45% {
+    transform: translateX(-4px);
+  }
+  60% {
+    transform: translateX(4px);
+  }
+  75% {
+    transform: translateX(-2px);
+  }
+  90% {
+    transform: translateX(2px);
+  }
+}
+.animate-shake {
+  animation: shake 0.6s ease-in-out;
+}
+
+/* Tooltip de aviso */
+.quiz-tooltip {
+  position: absolute;
+  bottom: calc(100% + 10px);
+  left: 50%;
+  transform: translateX(-50%);
+  width: max-content;
+  max-width: 280px;
+  background: rgba(239, 68, 68, 0.92);
+  color: #fff;
+  font-family: "DM Sans", sans-serif;
+  font-size: 12px;
+  padding: 8px 16px;
+  border-radius: 2px;
+  box-shadow: 0 4px 20px rgba(0, 0, 0, 0.3);
+  backdrop-filter: blur(8px);
+  pointer-events: none;
+  animation: fadeIn 0.2s ease-out forwards;
+  z-index: 10;
+}
+.quiz-tooltip-arrow {
+  position: absolute;
+  top: 100%;
+  left: 50%;
+  transform: translateX(-50%);
+  border: 5px solid transparent;
+  border-top-color: rgba(239, 68, 68, 0.92);
+}
+
+/* Botão flutuante "↑ Pergunta X" */
+.btn-scroll-current {
+  position: fixed;
+  bottom: 24px;
+  right: 24px;
+  z-index: 50;
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  background: #c9a84c;
+  color: #0e2140;
+  font-family: "DM Sans", sans-serif;
+  font-size: 14px;
+  font-weight: 600;
+  padding: 12px 18px;
+  border-radius: 2px;
+  border: none;
+  cursor: pointer;
+  box-shadow: 0 4px 20px rgba(0, 0, 0, 0.3);
+  transition:
+    background 0.2s,
+    transform 0.15s;
+}
+.btn-scroll-current:hover {
+  background: #e2c97e;
+  transform: translateY(-2px);
+}

@@ -2,6 +2,7 @@ import { useState, useRef, useEffect } from "react";
 import Head from "next/head";
 import ProgressBar from "../components/ProgressBar";
 import QuestionCard from "../components/QuestionCard";
+import QuizSection from "../components/QuizSection";
 import { QUESTIONS, getScoreLevel } from "../data/questions";
 import { registerUser, notifyUser } from "../services/userService";
 import { fetchQuestions } from "../services/questionsService";
@@ -185,7 +186,7 @@ export default function Home() {
   return (
     <>
       <Head>
-        <title>Raio-X Empresarial — Diagnóstico Gratuito</title>
+        <title>Raio-X Empresarial</title>
       </Head>
 
       {/* Barra de progresso — visível apenas durante o questionário */}
@@ -225,7 +226,7 @@ export default function Home() {
             className="font-body text-xs tracking-[0.25em] uppercase text-brand-gold mb-4 animate-fade-in"
             style={{ animationDelay: "0.1s", opacity: 0 }}
           >
-            Diagnóstico Empresarial Gratuito
+            Diagnóstico Empresarial
           </p>
 
           {/* Linha decorativa */}
@@ -543,85 +544,14 @@ export default function Home() {
 
       {/* ── 3. QUESTIONÁRIO ─────────────────────────────────── */}
       {step === STEPS.QUIZ && (
-        <section className="min-h-screen px-4 md:px-6 pt-14 pb-16 max-w-2xl mx-auto">
-          {/* Cabeçalho da seção */}
-          <div className="mb-6 md:mb-10">
-            <p className="font-body text-xs tracking-[0.2em] uppercase text-brand-gold mb-2">
-              Etapa 2 de 2 — Diagnóstico
-            </p>
-            <h2 className="font-display text-2xl md:text-4xl text-white mb-1">
-              Raio-X da sua empresa
-            </h2>
-            <div className="w-8 h-px bg-brand-gold mb-3" />
-            <p className="font-body text-stone-600 text-base text-white">
-              Responda com honestidade — não há respostas certas ou erradas.{" "}
-              <span className="text-white font-medium">
-                {formData.company || "Sua empresa"}
-              </span>{" "}
-              merece um diagnóstico fiel.
-            </p>
-          </div>
-
-          <div>
-            {questions.map((question, index) => {
-              const firstUnanswered = questions.findIndex(
-                (q) => answers[q.id] === undefined,
-              );
-              const isFocused = allAnswered || index === firstUnanswered;
-
-              // Mostra título quando o type muda
-              const showCategory =
-                index === 0 || question.type !== questions[index - 1].type;
-
-              return (
-                <div key={question.id}>
-                  {showCategory && question.category && (
-                    <div className="mt-6 mb-1">
-                      <p className="font-display text-base tracking-[0.2em] text-brand-gold">
-                        {question.category}
-                      </p>
-                    </div>
-                  )}
-
-                  <QuestionCard
-                    question={question}
-                    index={index}
-                    selected={answers[question.id] ?? null}
-                    onAnswer={handleAnswer}
-                    isLast={index === questions.length - 1}
-                    isFocused={isFocused}
-                  />
-                </div>
-              );
-            })}
-          </div>
-
-          {/* Botão de confirmação final */}
-          <div
-            id="result-section"
-            className={`mt-12 transition-all duration-500 ${
-              allAnswered
-                ? "opacity-100 translate-y-0"
-                : "opacity-0 translate-y-4 pointer-events-none"
-            }`}
-          >
-            <div className="py-10 border-t border-white/10">
-              <p className="font-display text-2xl text-white mb-2">
-                Tudo pronto!
-              </p>
-              <p className="font-body text-base text-white/50 mb-2">
-                Revise suas respostas acima se quiser — você ainda pode
-                alterá-las.
-              </p>
-              <p className="font-body text-sm text-white/30 mb-8">
-                Quando estiver satisfeito, confirme para gerar seu diagnóstico.
-              </p>
-              <button onClick={handleShowResult} className="btn-primary">
-                Confirmar e ver diagnóstico →
-              </button>
-            </div>
-          </div>
-        </section>
+        <QuizSection
+          questions={questions}
+          answers={answers}
+          allAnswered={allAnswered}
+          formData={formData}
+          handleAnswer={handleAnswer}
+          handleShowResult={handleShowResult}
+        />
       )}
 
       {/* ── 4. RESULTADO ────────────────────────────────────── */}

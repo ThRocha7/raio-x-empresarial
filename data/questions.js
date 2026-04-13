@@ -58,7 +58,7 @@ export const SCORE_LEVELS = [
     emoji: "🚀",
     color: "#22c55e",
     description:
-      "Você pode estar perdendo <strong> 2% do faturamento!</strong> %Sua empresa está em um nível elevado de maturidade operacional. O foco agora é escala, previsibilidade e excelência! <br/><br/>Com base no seu nível atual, existe um potencial claro de recuperação de margem. O próximo passo é estruturar um plano para capturar esse valor de forma consistente. <br/><br/>A boa notícia é que essa margem já existe. Não depende de vender mais, e sim de ajustar o que já acontece hoje dentro da sua empresa. <br/><br/>Se você quiser, eu posso te mostrar exatamente onde começar e quais ações priorizar para já capturar esses ganhos nas próximas semanas!",
+      "Você pode estar perdendo <strong> 2% do faturamento!</strong> Sua empresa está em um nível elevado de maturidade operacional. O foco agora é controle, previsibilidade e autonomia! <br/><br/>Com base no seu nível atual, existe um potencial claro de recuperação de margem. O próximo passo é estruturar um plano para enxergar e capturar esse valor de forma consistente. <br/><br/>A boa notícia é que essa margem já existe. Não depende de vender mais, aumentar equipe ou realizar grandes investimentos, e sim ajustar o que já acontece hoje e conduzir a sua empresa nessa jornada. <br/><br/>Eu posso te mostrar exatamente onde começar e quais ações priorizar para já capturar esses ganhos nas próximas semanas! É só clicar no botão abaixo!",
     cta: "Quero escalar minha empresa",
   },
   {
@@ -67,7 +67,7 @@ export const SCORE_LEVELS = [
     emoji: "📈",
     color: "#C9A84C",
     description:
-      "Você está perdendo entre <strong> 2% a 5% do faturamento!</strong> Sua empresa já possui estrutura, mas ainda perde eficiência por falta de integração e disciplina na execução! <br/><br/>Com base no seu nível atual, existe um potencial claro de recuperação de margem. O próximo passo é estruturar um plano para capturar esse valor de forma consistente. <br/><br/>A boa notícia é que essa margem já existe. Não depende de vender mais, e sim de ajustar o que já acontece hoje dentro da sua empresa. <br/><br/>Se você quiser, eu posso te mostrar exatamente onde começar e quais ações priorizar para já capturar esses ganhos nas próximas semanas!",
+      "Você está perdendo entre <strong> 2% a 5% do faturamento!</strong> Sua empresa já possui estrutura, mas ainda perde eficiência por falta de integração e disciplina na execução! <br/><br/>Com base no seu nível atual, existe um potencial claro de recuperação de margem. O próximo passo é estruturar um plano para enxergar e capturar esse valor de forma consistente. <br/><br/>A boa notícia é que essa margem já existe. Não depende de vender mais, aumentar equipe ou realizar grandes investimentos, e sim ajustar o que já acontece hoje e conduzir a sua empresa nessa jornada. <br/><br/>Eu posso te mostrar exatamente onde começar e quais ações priorizar para já capturar esses ganhos nas próximas semanas! É só clicar no botão abaixo!",
     cta: "Quero evoluir minha gestão",
   },
   {
@@ -76,14 +76,12 @@ export const SCORE_LEVELS = [
     emoji: "⚠️",
     color: "#ef4444",
     description:
-      "Você está perdendo entre <strong>5% a 12% do faturamento!</strong> Sua empresa ainda opera de forma reativa, existe um grande potencial de ganho rápido apenas organizando processos e criando padrões mínimos! <br/><br/>Com base no seu nível atual, existe um potencial claro de recuperação de margem. O próximo passo é estruturar um plano para capturar esse valor de forma consistente. <br/><br/>A boa notícia é que essa margem já existe. Não depende de vender mais, e sim de ajustar o que já acontece hoje dentro da sua empresa. <br/><br/>Se você quiser, eu posso te mostrar exatamente onde começar e quais ações priorizar para já capturar esses ganhos nas próximas semanas!",
+      "Você está perdendo entre <strong>5% a 12% do faturamento!</strong> Sua empresa ainda opera de forma reativa, existe um grande potencial de ganho rápido apenas organizando processos e criando padrões mínimos! <br/><br/>Com base no seu nível atual, existe um potencial claro de recuperação de margem. O próximo passo é estrutura um plano para enxergar e capturar esse valor de forma consistente. <br/><br/>A boa notícia é que essa margem já existe. Não depende de vender mais, aumentar equipe ou realizar grandes investimentos, e sim ajustar o que já acontece hoje e conduzir a sua empresa nessa jornada. <br/><br/>Eu posso te mostrar exatamente onde começar e quais ações priorizar para já capturar esses ganhos nas próximas semanas! É só clicar no botão abaixo!",
     cta: "Quero resolver isso agora",
   },
 ];
 
-export function getScoreLevel(score, lengthQuestions) {
-  const percent = (score * 100) / lengthQuestions;
-
+export function getScoreLevel(percent) {
   return (
     SCORE_LEVELS.find((level) => percent >= level.min) ||
     SCORE_LEVELS[SCORE_LEVELS.length - 1]

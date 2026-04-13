@@ -63,8 +63,12 @@ export default function Home() {
   const allAnswered = answeredCount === questions.length;
 
   // ── Pontuação ────────────────────────────────────────────
-  const totalScore = Object.values(answers).reduce((acc, val) => acc + val, 0);
-  const scoreLevel = getScoreLevel(totalScore, questions.length);
+  const totalScore = questions.length
+    ? (Object.values(answers).reduce((acc, val) => acc + Number(val || 0), 0) *
+        100) /
+      questions.length
+    : 0;
+  const scoreLevel = getScoreLevel(totalScore);
 
   // ── Navegação para o topo ao trocar de seção ─────────────
   function scrollToTop() {
@@ -156,9 +160,7 @@ export default function Home() {
       answers: answers,
       result: {
         totalScore: totalScore,
-        maxScore: questions.length * 4, // ← ATUALIZADO
         label: scoreLevel.label,
-        emoji: scoreLevel.emoji,
       },
       submittedAt: new Date().toISOString(),
     };
@@ -178,7 +180,7 @@ export default function Home() {
     `Olá! Acabei de fazer o Raio-X Empresarial e recebi o diagnóstico: *${scoreLevel.label}*. Gostaria de saber mais sobre como melhorar os resultados da ${formData.company || "minha empresa"}.`,
   );
   // ⚠️ Substitua pelo número do WhatsApp comercial real (formato: 5511999999999)
-  const whatsappLink = `https://wa.me/5516991540596?text=${whatsappMessage}`;
+  const whatsappLink = `https://wa.me/5516994311448?text=${whatsappMessage}`;
 
   // ════════════════════════════════════════════════════════
   // RENDER
@@ -295,7 +297,7 @@ export default function Home() {
                 {
                   num: "02",
                   title: "Responda o diagnóstico",
-                  desc: "Responda 3 perguntas de múltipla escolha sobre a gestão da sua empresa. Sem respostas certas ou erradas.",
+                  desc: "Responda as perguntas de múltipla escolha sobre a gestão da sua empresa. Sem respostas certas ou erradas.",
                 },
                 {
                   num: "03",

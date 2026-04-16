@@ -1,11 +1,10 @@
 import { useState, useRef, useEffect } from "react";
 import Head from "next/head";
-import ProgressBar from "../components/ProgressBar";
-import QuestionCard from "../components/QuestionCard";
-import QuizSection from "../components/QuizSection";
-import { QUESTIONS, getScoreLevel } from "../data/questions";
-import { registerUser, notifyUser } from "../services/userService";
-import { fetchQuestions } from "../services/questionsService";
+import ProgressBar from "../../components/ProgressBar";
+import QuizSection from "../../components/QuizSection";
+import { QUESTIONS, getScoreLevel } from "../../data/questions";
+import { registerUser, notifyUser } from "../../services/userService";
+import { fetchQuestions } from "../../services/questionsService";
 
 // ── Seções da jornada ──────────────────────────────────────
 const STEPS = {
@@ -96,6 +95,26 @@ export default function Home() {
     }
   }
 
+  useEffect(() => {
+    function handleUnload() {
+      if (step !== STEPS.QUIZ || allAnswered) return;
+
+      // sendBeacon garante o envio mesmo com a página fechando
+      navigator.sendBeacon(
+        "/api/v1/abandoned",
+        JSON.stringify({
+          lead: { id: userId, ...formData },
+          answeredCount,
+          answers,
+          abandonedAt: new Date().toISOString(),
+        }),
+      );
+    }
+
+    window.addEventListener("beforeunload", handleUnload);
+    return () => window.removeEventListener("beforeunload", handleUnload);
+  }, [userId, formData, answers, answeredCount]);
+
   /** Aplica máscara de telefone (XX) XXXXX-XXXX */
   function formatPhone(value) {
     const digits = value.replace(/\D/g, "").slice(0, 11);
@@ -161,6 +180,7 @@ export default function Home() {
       result: {
         totalScore: totalScore,
         label: scoreLevel.label,
+        description: scoreLevel.description,
       },
       submittedAt: new Date().toISOString(),
     };

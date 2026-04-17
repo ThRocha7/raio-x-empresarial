@@ -1,9 +1,10 @@
 import { useState, useRef, useEffect } from "react";
 import Head from "next/head";
-import ProgressBar from "../../components/ProgressBar";
-import QuizSection from "../../components/QuizSection";
-import { QUESTIONS, getScoreLevel } from "../../data/questions";
-import { registerUser, notifyUser } from "../../services/userService";
+import ProgressBar from "@/components/ProgressBar";
+import QuizSection from "@/components/QuizSection";
+import { QUESTIONS, getScoreLevel } from "@/data/questions";
+import { registerUser } from "@/services/userService";
+import { notifyUser } from "@/services/notificationService";
 import { constants } from "@/config/constants";
 import { formatPhone } from "@/utils/formaters";
 import { scrollToTop } from "@/utils/dom";
@@ -578,13 +579,13 @@ export default function Home() {
             </h3>
             {mounted ? (
               <p
-                className="font-body text-white/60 text-sm leading-relaxed"
+                className="font-body text-white text-sm leading-relaxed"
                 dangerouslySetInnerHTML={{
                   __html: scoreLevel.description.replace(/\n/g, "<br/>"),
                 }}
               />
             ) : (
-              <p className="font-body text-white/60 text-sm leading-relaxed">
+              <p className="font-body text-white text-sm leading-relaxed">
                 {scoreLevel.description
                   .replace(/<[^>]*>/g, "")
                   .replace(/\n/g, " ")}

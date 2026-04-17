@@ -45,18 +45,21 @@ export default function QuizSection({
     return () => window.removeEventListener("scroll", onScroll);
   }, [firstUnansweredIndex, allAnswered]);
 
-  function handleConfirmClick() {
-    setIsSubmitting(true);
-    if (allAnswered) {
-      handleShowResult();
-      setIsSubmitting(false);
+  async function handleConfirmClick() {
+    if (!allAnswered) {
+      setShaking(true);
+      setShowTooltip(true);
+      setTimeout(() => setShaking(false), 600);
+      setTimeout(() => setShowTooltip(false), 3000);
       return;
     }
-    // Ainda há perguntas sem resposta — shake + tooltip
-    setShaking(true);
-    setShowTooltip(true);
-    setTimeout(() => setShaking(false), 600);
-    setTimeout(() => setShowTooltip(false), 3000);
+
+    setIsSubmitting(true);
+    try {
+      await handleShowResult();
+    } finally {
+      setIsSubmitting(false);
+    }
   }
 
   function scrollToCurrentQuestion() {
@@ -127,10 +130,10 @@ export default function QuizSection({
         <div className="relative inline-block w-full">
           <button
             onClick={handleConfirmClick}
-            className={`btn-primary w-full ${!allAnswered ? "btn-disabled" : ""} ${shaking ? "animate-shake" : ""}`}
+            className={`btn-primary w-full ${!allAnswered ? "btn-disabled" : ""} ${shaking ? "animate-shake" : ""} disabled:opacity-50`}
             disabled={isSubmitting}
           >
-            {isSubmitting ? "Carregando..." : "Confirmar e ver diagnóstico →"}
+            {isSubmitting ? "Aguarde..." : "Confirmar e ver diagnóstico →"}
           </button>
 
           {/* Tooltip de aviso */}

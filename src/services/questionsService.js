@@ -1,21 +1,17 @@
-import axios from "axios";
-import { QUESTIONS as LOCAL_QUESTIONS } from "../data/questions";
-
-const api = axios.create({ baseURL: "/api/v1" });
+import { api } from "@/config/apis";
 
 export async function fetchQuestions() {
   try {
-    const response = await api.post("/questions");
-    const data = await response.data;
+    const { data: questions } = await api.get("quiz/questions");
 
     // Garantir que retornamos um array válido
-    if (data?.questions && Array.isArray(data.questions)) {
-      return data.questions;
+    if (questions && Array.isArray(questions)) {
+      return questions;
     }
 
-    return Array.isArray(data) ? data : LOCAL_QUESTIONS;
+    return Array.isArray(questions) ? questions : LOCAL_QUESTIONS;
   } catch (err) {
-    console.warn("API indisponível. Usando fallback local.", err);
+    console.warn("API unavailable. Using local fallback.", err);
     return LOCAL_QUESTIONS;
   }
 }

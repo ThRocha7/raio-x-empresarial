@@ -117,7 +117,7 @@ export default function Home() {
     setIsSubmitting(true);
     try {
       const registeredUser = await registerUser(formData);
-      const id = registeredUser[0].id;
+      const id = registeredUser.id;
 
       setUserId(id);
       setStep(constants.STEPS.QUIZ);

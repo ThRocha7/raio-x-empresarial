@@ -1,8 +1,8 @@
-import api from "@/config/apis";
+import { api } from "@/config/apis";
 
 export async function registerUser(data) {
-  const { data: user } = await api.post("/register/user", data);
-  return user;
+  const { data: response } = await api.post("/register/user", data);
+  return response.user;
 }
 
 // export async function notifyUser(data) {

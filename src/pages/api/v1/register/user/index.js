@@ -12,8 +12,14 @@ export default async function handler(req, res) {
     const digits = whatsapp.replace(/\D/g, "");
     const phoneNumber = `55${digits}`;
 
-    const data = { name, phoneNumber, email, company, role, lgpdConsent };
-    const user = await registerUser(data);
+    const user = await registerUser({
+      name,
+      phoneNumber,
+      email,
+      company,
+      role,
+      lgpdConsent,
+    });
 
     return res.status(201).json({ message: "sucess", user });
   } catch (err) {

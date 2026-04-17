@@ -18,6 +18,8 @@ export default function QuizSection({
   formData,
   handleAnswer,
   handleShowResult,
+  isSubmitting,
+  setIsSubmitting,
 }) {
   const [shaking, setShaking] = useState(false);
   const [showTooltip, setShowTooltip] = useState(false);
@@ -44,8 +46,10 @@ export default function QuizSection({
   }, [firstUnansweredIndex, allAnswered]);
 
   function handleConfirmClick() {
+    setIsSubmitting(true);
     if (allAnswered) {
       handleShowResult();
+      setIsSubmitting(false);
       return;
     }
     // Ainda há perguntas sem resposta — shake + tooltip
@@ -62,7 +66,6 @@ export default function QuizSection({
 
   return (
     <section className="min-h-screen px-4 md:px-6 pt-14 pb-16 max-w-2xl mx-auto">
-
       {/* Cabeçalho */}
       <div className="mb-6 md:mb-10">
         <p className="font-body text-xs tracking-[0.2em] uppercase text-brand-gold mb-2">
@@ -125,8 +128,9 @@ export default function QuizSection({
           <button
             onClick={handleConfirmClick}
             className={`btn-primary w-full ${!allAnswered ? "btn-disabled" : ""} ${shaking ? "animate-shake" : ""}`}
+            disabled={isSubmitting}
           >
-            Confirmar e ver diagnóstico →
+            {isSubmitting ? "Carregando..." : "Confirmar e ver diagnóstico →"}
           </button>
 
           {/* Tooltip de aviso */}
@@ -148,7 +152,6 @@ export default function QuizSection({
           ↑ Pergunta {firstUnansweredIndex + 1}
         </button>
       )}
-
     </section>
   );
 }

@@ -4,38 +4,17 @@ import ProgressBar from "../../components/ProgressBar";
 import QuizSection from "../../components/QuizSection";
 import { QUESTIONS, getScoreLevel } from "../../data/questions";
 import { registerUser, notifyUser } from "../../services/userService";
+import { constants } from "@/config/constants";
+import { formatPhone } from "@/utils/formaters";
+import { scrollToTop } from "@/utils/dom";
 import { fetchQuestions } from "../../services/questionsService";
-
-// ── Seções da jornada ──────────────────────────────────────
-const STEPS = {
-  HOME: "home",
-  COLLECT: "collect",
-  QUIZ: "quiz",
-  RESULT: "result",
-};
-
-// ── Cargos disponíveis na drop list ───────────────────────
-const ROLES = [
-  "Dono / Sócio",
-  "CEO / Diretor Executivo",
-  "Diretor Comercial",
-  "Diretor de Operações",
-  "Gerente Geral",
-  "Gerente Comercial",
-  "Gerente de Operações",
-  "Coordenador",
-  "Supervisor",
-  "Outro cargo de liderança",
-];
 
 export default function Home() {
   // ── Estado de navegação ──────────────────────────────────
-  const [step, setStep] = useState(STEPS.HOME);
+  const [step, setStep] = useState(constants.STEPS.HOME);
 
   // ── Estado das perguntas ─────────────────────────────────
-  // Inicia com as perguntas locais; substituído pela API ao clicar em "Começar agora".
-  const [questions, setQuestions] = useState(QUESTIONS); // ← NOVO
-  const [isLoadingQuestions, setIsLoadingQuestions] = useState(false); // ← NOVO
+  const [questions, setQuestions] = useState(QUESTIONS);
 
   // ── Estado do formulário de coleta ──────────────────────
   const [formData, setFormData] = useState({
@@ -70,11 +49,6 @@ export default function Home() {
   const scoreLevel = getScoreLevel(totalScore);
 
   // ── Navegação para o topo ao trocar de seção ─────────────
-  function scrollToTop() {
-    setTimeout(() => {
-      topRef.current?.scrollIntoView({ behavior: "smooth" });
-    }, 50);
-  }
 
   const [mounted, setMounted] = useState(false);
   useEffect(() => {
@@ -97,7 +71,7 @@ export default function Home() {
 
   useEffect(() => {
     function handleUnload() {
-      if (step !== STEPS.QUIZ || allAnswered) return;
+      if (step !== constants.STEPS.QUIZ || allAnswered) return;
 
       // sendBeacon garante o envio mesmo com a página fechando
       navigator.sendBeacon(
@@ -114,14 +88,6 @@ export default function Home() {
     window.addEventListener("beforeunload", handleUnload);
     return () => window.removeEventListener("beforeunload", handleUnload);
   }, [userId, formData, answers, answeredCount]);
-
-  /** Aplica máscara de telefone (XX) XXXXX-XXXX */
-  function formatPhone(value) {
-    const digits = value.replace(/\D/g, "").slice(0, 11);
-    if (digits.length <= 2) return `(${digits}`;
-    if (digits.length <= 7) return `(${digits.slice(0, 2)}) ${digits.slice(2)}`;
-    return `(${digits.slice(0, 2)}) ${digits.slice(2, 7)}-${digits.slice(7)}`;
-  }
 
   function handlePhoneChange(e) {
     setFormData((prev) => ({ ...prev, whatsapp: formatPhone(e.target.value) }));
@@ -152,12 +118,13 @@ export default function Home() {
     try {
       const registeredUser = await registerUser(formData);
       const id = registeredUser[0].id;
+
       setUserId(id);
-      setStep(STEPS.QUIZ);
-      scrollToTop();
+      setStep(constants.STEPS.QUIZ);
+      scrollToTop(topRef);
     } catch (err) {
       console.error("Erro ao registrar usuário:", err);
-      setStep(STEPS.QUIZ);
+      setStep(constants.STEPS.QUIZ);
     } finally {
       setIsSubmitting(false);
     }
@@ -187,8 +154,8 @@ export default function Home() {
 
     try {
       await notifyUser(payload);
-      setStep(STEPS.RESULT);
-      scrollToTop();
+      setStep(constants.STEPS.RESULT);
+      scrollToTop(topRef);
     } catch (err) {
       console.error("Erro ao gerar diagnóstico:", err);
       alert("Não foi possível gerar o diagnóstico. Tente novamente.");
@@ -199,7 +166,7 @@ export default function Home() {
   const whatsappMessage = encodeURIComponent(
     `Olá! Acabei de fazer o Raio-X Empresarial e recebi o diagnóstico: *${scoreLevel.label}*. Gostaria de saber mais sobre como melhorar os resultados da ${formData.company || "minha empresa"}.`,
   );
-  // ⚠️ Substitua pelo número do WhatsApp comercial real (formato: 5511999999999)
+
   const whatsappLink = `https://wa.me/5516994311448?text=${whatsappMessage}`;
 
   // ════════════════════════════════════════════════════════
@@ -212,7 +179,7 @@ export default function Home() {
       </Head>
 
       {/* Barra de progresso — visível apenas durante o questionário */}
-      {step === STEPS.QUIZ && (
+      {step === constants.STEPS.QUIZ && (
         <ProgressBar
           percent={progressPercent}
           answered={answeredCount}
@@ -224,7 +191,7 @@ export default function Home() {
       <div ref={topRef} />
 
       {/* ── 1. HOME ─────────────────────────────────────────── */}
-      {step === STEPS.HOME && (
+      {step === constants.STEPS.HOME && (
         <section className="min-h-screen flex flex-col items-center justify-center px-5 py-10 md:py-16 max-w-2xl mx-auto">
           {/* Ícone / logo decorativo */}
           <div className="mb-8 animate-fade-in">
@@ -272,9 +239,8 @@ export default function Home() {
           {/* ── CTA principal — */}
           <button
             onClick={async () => {
-              setIsLoadingQuestions(true);
+              setIsSubmitting(true);
               const loaded = await fetchQuestions();
-              setIsLoadingQuestions(false);
 
               // Ordena por type antes de salvar
               const sorted = [...loaded].sort((a, b) =>
@@ -282,14 +248,15 @@ export default function Home() {
               );
               setQuestions(sorted);
 
-              setStep(STEPS.COLLECT);
-              scrollToTop();
+              setStep(constants.STEPS.COLLECT);
+              setIsSubmitting(false);
+              scrollToTop(topRef);
             }}
-            disabled={isLoadingQuestions}
+            disabled={isSubmitting}
             className="btn-primary text-base px-12 py-5 animate-fade-up disabled:opacity-60"
             style={{ animationDelay: "0.6s", opacity: 0 }}
           >
-            {isLoadingQuestions ? "Carregando..." : "Começar agora"}
+            {isSubmitting ? "Carregando..." : "Começar agora"}
           </button>
 
           {/* Bloco explicativo "Como funciona" */}
@@ -356,7 +323,7 @@ export default function Home() {
       )}
 
       {/* ── 2. COLETA DE DADOS ──────────────────────────────── */}
-      {step === STEPS.COLLECT && (
+      {step === constants.STEPS.COLLECT && (
         <section className="min-h-screen flex flex-col items-center justify-center px-5 py-12 md:py-20 max-w-2xl mx-auto">
           {/* Cabeçalho */}
           <div className="w-full mb-10">
@@ -469,7 +436,7 @@ export default function Home() {
                 <option value="" disabled>
                   Selecione seu cargo...
                 </option>
-                {ROLES.map((role) => (
+                {constants.ROLES.map((role) => (
                   <option
                     key={role}
                     value={role}
@@ -556,7 +523,7 @@ export default function Home() {
 
           {/* Voltar */}
           <button
-            onClick={() => setStep(STEPS.HOME)}
+            onClick={() => setStep(constants.STEPS.HOME)}
             className="mt-4 font-body text-sm text-white/35 hover:text-white/70 transition-colors duration-200"
           >
             ← Voltar ao início
@@ -565,7 +532,7 @@ export default function Home() {
       )}
 
       {/* ── 3. QUESTIONÁRIO ─────────────────────────────────── */}
-      {step === STEPS.QUIZ && (
+      {step === constants.STEPS.QUIZ && (
         <QuizSection
           questions={questions}
           answers={answers}
@@ -573,11 +540,13 @@ export default function Home() {
           formData={formData}
           handleAnswer={handleAnswer}
           handleShowResult={handleShowResult}
+          isSubmitting={isSubmitting}
+          setIsSubmitting={setIsSubmitting}
         />
       )}
 
       {/* ── 4. RESULTADO ────────────────────────────────────── */}
-      {step === STEPS.RESULT && (
+      {step === constants.STEPS.RESULT && (
         <section className="min-h-screen flex flex-col items-center justify-center px-5 py-12 md:py-20 max-w-2xl mx-auto">
           {/* Emoji do nível */}
           <div className="text-5xl mb-6 animate-fade-in">

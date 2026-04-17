@@ -1,4 +1,3 @@
-import axios from "axios";
 import { registerUser } from "@/server/services/userService";
 
 export default async function handler(req, res) {

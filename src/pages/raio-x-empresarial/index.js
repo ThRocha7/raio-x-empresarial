@@ -77,10 +77,15 @@ export default function Home() {
       // sendBeacon garante o envio mesmo com a página fechando
       navigator.sendBeacon(
         "/api/v1/notification/abandoned",
-        JSON.stringify({
-          lead: { id: userId, ...formData },
-          abandonedAt: new Date().toISOString(),
-        }),
+        new Blob(
+          [
+            JSON.stringify({
+              lead: { id: userId, ...formData },
+              abandonedAt: new Date().toISOString(),
+            }),
+          ],
+          { type: "application/json" }, // 👈 isso força o Content-Type correto
+        ),
       );
     }
 
@@ -163,7 +168,7 @@ export default function Home() {
 
   // ── WhatsApp CTA link ────────────────────────────────────
   const whatsappMessage = encodeURIComponent(
-    `Olá! Acabei de fazer o Raio-X Empresarial e recebi o diagnóstico: *${scoreLevel.label}*. Gostaria de saber mais sobre como melhorar os resultados da ${formData.company || "minha empresa"}.`,
+    `Olá! Acabei de fazer o Raio-X Empresarial e recebi o diagnóstico: *${scoreLevel.label}*. Gostaria de saber mais sobre como melhorar os resultados da ${formData.company || "minha empresa"} com o SMI - Sistema de Margem Invisível.`,
   );
 
   const whatsappLink = `https://wa.me/5516994311448?text=${whatsappMessage}`;

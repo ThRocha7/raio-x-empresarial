@@ -1,4 +1,4 @@
-import { pool } from "@/config/db";
+import { pool } from "@/config/server/db";
 
 export async function insertUser(values) {
   const query = `

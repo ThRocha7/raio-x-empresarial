@@ -7,7 +7,7 @@ export default async function handler(req, res) {
   try {
     const response = await externalApi.post("/", {
       ...req.body,
-      process: "notifyUser",
+      process: "notifyAbandoned",
     });
 
     return res.status(response.status).json(response.data);

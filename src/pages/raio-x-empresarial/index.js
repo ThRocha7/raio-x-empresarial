@@ -5,7 +5,7 @@ import QuizSection from "@/components/QuizSection";
 import { QUESTIONS, getScoreLevel } from "@/data/questions";
 import { registerUser } from "@/services/userService";
 import { notifyUser } from "@/services/notificationService";
-import { constants } from "@/config/constants";
+import { constants } from "@/config/client/constants";
 import { formatPhone } from "@/utils/formaters";
 import { scrollToTop } from "@/utils/dom";
 import { fetchQuestions } from "../../services/questionsService";
@@ -76,11 +76,9 @@ export default function Home() {
 
       // sendBeacon garante o envio mesmo com a página fechando
       navigator.sendBeacon(
-        "/api/v1/abandoned",
+        "/api/v1/notification/abandoned",
         JSON.stringify({
           lead: { id: userId, ...formData },
-          answeredCount,
-          answers,
           abandonedAt: new Date().toISOString(),
         }),
       );

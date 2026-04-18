@@ -1,4 +1,4 @@
-import { api } from "@/config/apis";
+import { api } from "@/config/client/api";
 
 export async function fetchQuestions() {
   try {

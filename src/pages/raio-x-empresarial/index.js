@@ -71,6 +71,25 @@ export default function Home() {
   }
 
   /**
+   * Salva progresso no banco com debounce de 10s.
+   * Dispara após o usuário parar de responder por 10 segundos,
+   * agrupando várias respostas em um único request.
+   */
+  useEffect(() => {
+    if (step !== constants.STEPS.QUIZ || allAnswered || !userId) return;
+
+    const timer = setTimeout(() => {
+      fetch("/api/v1/quiz/progress", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({ clientId: userId, answers }),
+      }).catch((err) => console.error("Erro ao salvar progresso:", err));
+    }, 10_000); // 10 segundos de inatividade
+
+    return () => clearTimeout(timer);
+  }, [answeredCount]); // eslint-disable-line react-hooks/exhaustive-deps
+
+  /**
    * Detecta abandono do quiz em desktop e mobile.
    *
    * Estratégia:

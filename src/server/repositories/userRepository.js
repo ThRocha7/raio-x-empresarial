@@ -24,14 +24,25 @@ export async function insertUser(values) {
 }
 
 /**
+ * Marca o usuário como em progresso no quiz.
+ */
+export async function markUserInProgress({ id }) {
+  const query = `
+    UPDATE clients
+    SET quiz_status = 'in_progress'
+    WHERE id = $1 AND quiz_status = 'registered'
+    RETURNING id, quiz_status;
+  `;
+
+  const result = await pool.query(query, [id]);
+  return result.rows[0] ?? null;
+}
+
+/**
  * Marca o usuário como tendo abandonado o quiz.
- * Requer as colunas quiz_status e abandoned_at na tabela clients.
  *
- * Migration necessária:
- *   ALTER TABLE clients
- *     ADD COLUMN IF NOT EXISTS quiz_status   TEXT    DEFAULT 'registered',
- *     ADD COLUMN IF NOT EXISTS abandoned_at  TIMESTAMPTZ,
- *     ADD COLUMN IF NOT EXISTS answered_count INT     DEFAULT 0;
+ * Requer as colunas (já criadas via migration):
+ *   quiz_status, abandoned_at, answered_count
  */
 export async function markUserAbandoned({ id, abandonedAt, answeredCount }) {
   const query = `

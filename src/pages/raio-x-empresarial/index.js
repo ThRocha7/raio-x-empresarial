@@ -70,28 +70,57 @@ export default function Home() {
     }
   }
 
+  /**
+   * Detecta abandono do quiz em desktop e mobile.
+   *
+   * Estratégia:
+   *   - Desktop: "beforeunload" (fechar aba, navegar para outro site, F5)
+   *   - Mobile:  "visibilitychange" com document.visibilityState === "hidden"
+   *              Isso captura: troca de app, home button, bloquear tela,
+   *              pull-to-close no Safari iOS — cenários onde beforeunload
+   *              não dispara.
+   *
+   * sendBeacon é usado em ambos os casos por ser fire-and-forget e
+   * funcionar mesmo com a página sendo destruída.
+   */
   useEffect(() => {
-    function handleUnload() {
-      if (step !== constants.STEPS.QUIZ || allAnswered) return;
+    function shouldCapture() {
+      return step === constants.STEPS.QUIZ && !allAnswered;
+    }
 
-      // sendBeacon garante o envio mesmo com a página fechando
-      navigator.sendBeacon(
-        "/api/v1/notification/abandoned",
-        new Blob(
-          [
-            JSON.stringify({
-              lead: { id: userId, ...formData },
-              abandonedAt: new Date().toISOString(),
-            }),
-          ],
-          { type: "application/json" }, // 👈 isso força o Content-Type correto
-        ),
+    function buildPayload() {
+      return new Blob(
+        [
+          JSON.stringify({
+            lead: { id: userId, ...formData },
+            answeredCount,
+            abandonedAt: new Date().toISOString(),
+          }),
+        ],
+        { type: "application/json" },
       );
     }
 
-    window.addEventListener("beforeunload", handleUnload);
-    return () => window.removeEventListener("beforeunload", handleUnload);
-  }, [userId, formData, answers, answeredCount]);
+    function handleBeforeUnload() {
+      if (!shouldCapture()) return;
+      navigator.sendBeacon("/api/v1/notification/abandoned", buildPayload());
+    }
+
+    function handleVisibilityChange() {
+      // Só actua quando a aba/app vai para segundo plano
+      if (document.visibilityState !== "hidden") return;
+      if (!shouldCapture()) return;
+      navigator.sendBeacon("/api/v1/notification/abandoned", buildPayload());
+    }
+
+    window.addEventListener("beforeunload", handleBeforeUnload);
+    document.addEventListener("visibilitychange", handleVisibilityChange);
+
+    return () => {
+      window.removeEventListener("beforeunload", handleBeforeUnload);
+      document.removeEventListener("visibilitychange", handleVisibilityChange);
+    };
+  }, [step, allAnswered, userId, formData, answeredCount]);
 
   function handlePhoneChange(e) {
     setFormData((prev) => ({ ...prev, whatsapp: formatPhone(e.target.value) }));

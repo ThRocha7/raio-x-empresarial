@@ -22,3 +22,28 @@ export async function insertUser(values) {
   const result = await pool.query(query, values);
   return result.rows[0];
 }
+
+/**
+ * Marca o usuário como tendo abandonado o quiz.
+ * Requer as colunas quiz_status e abandoned_at na tabela clients.
+ *
+ * Migration necessária:
+ *   ALTER TABLE clients
+ *     ADD COLUMN IF NOT EXISTS quiz_status   TEXT    DEFAULT 'registered',
+ *     ADD COLUMN IF NOT EXISTS abandoned_at  TIMESTAMPTZ,
+ *     ADD COLUMN IF NOT EXISTS answered_count INT     DEFAULT 0;
+ */
+export async function markUserAbandoned({ id, abandonedAt, answeredCount }) {
+  const query = `
+    UPDATE clients
+    SET
+      quiz_status    = 'abandoned',
+      abandoned_at   = $2,
+      answered_count = $3
+    WHERE id = $1
+    RETURNING id, quiz_status, abandoned_at, answered_count;
+  `;
+
+  const result = await pool.query(query, [id, abandonedAt, answeredCount]);
+  return result.rows[0] ?? null;
+}

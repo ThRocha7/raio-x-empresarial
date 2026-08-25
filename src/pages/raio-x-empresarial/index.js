@@ -194,6 +194,7 @@ export default function Home() {
     const payload = {
       lead: {
         id: userId,
+        ...formData, // CORREÇÃO: injetando os dados de contato salvos na etapa 1 para o payload não chegar vazio no n8n.
       },
       answers: answers,
       result: {

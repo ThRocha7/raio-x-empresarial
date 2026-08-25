@@ -194,6 +194,11 @@ export default function Home() {
     const payload = {
       lead: {
         id: userId,
+        name: formData.name,
+        whatsapp: formData.whatsapp,
+        email: formData.email,
+        company: formData.company,
+        role: formData.role,
       },
       answers: answers,
       result: {
